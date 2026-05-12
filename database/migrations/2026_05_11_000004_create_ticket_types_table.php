@@ -38,6 +38,9 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->unsignedInteger('sort_order')->default(0);
 
+            $table->boolean('is_group_ticket')->default(false);
+            $table->unsignedSmallInteger('group_size')->nullable();
+
             $table->timestamps();
         });
     }

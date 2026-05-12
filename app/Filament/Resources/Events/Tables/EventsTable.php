@@ -4,9 +4,7 @@ namespace App\Filament\Resources\Events\Tables;
 
 use App\Enums\EventStatus;
 use App\Enums\EventVisibility;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -66,12 +64,7 @@ class EventsTable
                     ->searchable(),
             ])
             ->recordActions([
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                ViewAction::make(),
             ]);
     }
 }

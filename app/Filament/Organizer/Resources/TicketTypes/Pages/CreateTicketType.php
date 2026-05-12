@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\TicketTypes\Pages;
+namespace App\Filament\Organizer\Resources\TicketTypes\Pages;
 
-use App\Filament\Resources\TicketTypes\TicketTypeResource;
+use App\Filament\Organizer\Resources\TicketTypes\TicketTypeResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateTicketType extends CreateRecord

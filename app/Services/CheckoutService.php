@@ -36,26 +36,38 @@ class CheckoutService
                     );
                 }
 
-                if (! $ticketType->canPurchase($item['quantity'])) {
+                $quantity = $item['quantity'];
+
+                // Group tickets: quantity must exactly equal group_size
+                if ($ticketType->isGroupTicket()) {
+                    if ($quantity !== $ticketType->group_size) {
+                        throw new InvalidArgumentException(
+                            "Group ticket [{$ticketType->name}] requires a quantity of exactly {$ticketType->group_size}."
+                        );
+                    }
+                }
+
+                if (! $ticketType->canPurchase($quantity)) {
                     throw new RuntimeException(
-                        "Cannot purchase {$item['quantity']} of [{$ticketType->name}]: "
+                        "Cannot purchase {$quantity} of [{$ticketType->name}]: "
                         . 'check availability, purchase limits, or sale window.'
                     );
                 }
 
-                $lineTotal  = (float) $ticketType->price * $item['quantity'];
-                $subtotal  += $lineTotal;
-                $currency   = $ticketType->currency;
+                // Group ticket: flat price per group. Normal ticket: price × quantity.
+                $lineTotal = $ticketType->getTotalPriceForOrder($quantity);
+                $subtotal += $lineTotal;
+                $currency  = $ticketType->currency;
 
                 $orderItems[] = [
                     'ticket_type_id' => $ticketType->id,
-                    'quantity'       => $item['quantity'],
+                    'quantity'       => $quantity,
                     'unit_price'     => $ticketType->price,
                     'subtotal'       => $lineTotal,
                 ];
 
-                // Reserve inventory so concurrent checkouts see updated availability
-                $ticketType->increment('sold', $item['quantity']);
+                // Reserve inventory — group tickets consume group_size slots
+                $ticketType->increment('sold', $quantity);
             }
 
             $order = Order::create([

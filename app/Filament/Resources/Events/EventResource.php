@@ -3,8 +3,7 @@
 namespace App\Filament\Resources\Events;
 
 use App\Enums\UserRole;
-use App\Filament\Resources\Events\Pages\CreateEvent;
-use App\Filament\Resources\Events\Pages\EditEvent;
+use App\Filament\Resources\Events\Pages;
 use App\Filament\Resources\Events\Pages\ListEvents;
 use App\Filament\Resources\Events\Schemas\EventForm;
 use App\Filament\Resources\Events\Tables\EventsTable;
@@ -15,6 +14,8 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class EventResource extends Resource
 {
@@ -22,10 +23,21 @@ class EventResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
+    protected static ?string $recordRouteKeyName = 'uuid';
+
+    public static function getUrl(?string $name = null, array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null, bool $shouldGuessMissingParameters = false, ?string $configuration = null): string
+    {
+        if (isset($parameters['record']) && $parameters['record'] instanceof Model) {
+            $parameters['record'] = $parameters['record']->uuid;
+        }
+
+        return parent::getUrl($name, $parameters, $isAbsolute, $panel, $tenant, $shouldGuessMissingParameters, $configuration);
+    }
+
     public static function getEloquentQuery(): Builder
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($user->role === UserRole::ADMIN) {
             return parent::getEloquentQuery();
@@ -47,15 +59,31 @@ class EventResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            RelationManagers\TicketTypesRelationManager::class,
+        ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return false;
+    }
+
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return false;
     }
 
     public static function getPages(): array
     {
         return [
-            'index'  => ListEvents::route('/'),
-            'create' => CreateEvent::route('/create'),
-            'edit'   => EditEvent::route('/{record}/edit'),
+            'index' => ListEvents::route('/'),
+            'view'  => Pages\ViewEvent::route('/{record}'),
         ];
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\Events\Schemas;
 
+use App\Enums\Country;
 use App\Enums\EventStatus;
 use App\Enums\EventVisibility;
+use Cheesegrits\FilamentGoogleMaps\Fields\Map;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -11,6 +13,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 
 class EventForm
@@ -26,7 +29,6 @@ class EventForm
 
             Select::make('category_id')
                 ->relationship('category', 'name')
-                ->searchable()
                 ->required(),
 
             TextInput::make('title')
@@ -68,15 +70,45 @@ class EventForm
             TextInput::make('city')
                 ->nullable(),
 
-            TextInput::make('country')
+            Select::make('country')
+                ->options(Country::options())
+                ->default(Country::KENYA->value)
+                ->nullable(),
+
+            Map::make('location')
+                ->label('Location')
+                ->defaultLocation([-1.286389, 36.817223]) // Nairobi
+                ->defaultZoom(12)
+                ->draggable()
+                ->geolocate()
+                ->height('400px')
+                ->afterStateHydrated(function (Map $component, $record): void {
+                    if ($record && $record->latitude && $record->longitude) {
+                        $component->state([
+                            'lat' => (float) $record->latitude,
+                            'lng' => (float) $record->longitude,
+                        ]);
+                    }
+                })
+                ->afterStateUpdated(function ($state, Set $set): void {
+                    $set('latitude', $state['lat'] ?? null);
+                    $set('longitude', $state['lng'] ?? null);
+                })
+                ->live()
+                ->dehydrated(false)
+                ->visible(fn (Get $get): bool => ! (bool) $get('is_online'))
                 ->nullable(),
 
             TextInput::make('latitude')
                 ->numeric()
+                ->readOnly()
+                ->visible(fn (Get $get): bool => ! (bool) $get('is_online'))
                 ->nullable(),
 
             TextInput::make('longitude')
                 ->numeric()
+                ->readOnly()
+                ->visible(fn (Get $get): bool => ! (bool) $get('is_online'))
                 ->nullable(),
 
             Select::make('timezone')

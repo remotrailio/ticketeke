@@ -4,6 +4,9 @@ namespace App\Filament\Organizer\Resources\Events\Tables;
 
 use App\Enums\EventStatus;
 use App\Enums\EventVisibility;
+use App\Filament\Organizer\Resources\TicketTypes\TicketTypeResource;
+use App\Models\Event;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -54,6 +57,10 @@ class EventsTable
                     ->searchable(),
             ])
             ->recordActions([
+                Action::make('ticket_types')
+                    ->label('Ticket Types')
+                    ->icon('heroicon-o-ticket')
+                    ->url(fn (Event $record): string => TicketTypeResource::getUrl('index', ['event' => $record->uuid])),
                 EditAction::make(),
             ])
             ->toolbarActions([

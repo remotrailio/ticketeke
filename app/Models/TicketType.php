@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
     'event_id', 'name', 'description', 'price', 'currency',
     'quantity', 'sold', 'min_per_order', 'max_per_order',
     'sales_start', 'sales_end', 'is_active', 'sort_order',
+    'is_group_ticket', 'group_size',
 ])]
 class TicketType extends Model
 {
@@ -28,15 +29,17 @@ class TicketType extends Model
     protected function casts(): array
     {
         return [
-            'price'         => 'decimal:2',
-            'quantity'      => 'integer',
-            'sold'          => 'integer',
-            'min_per_order' => 'integer',
-            'max_per_order' => 'integer',
-            'sales_start'   => 'datetime',
-            'sales_end'     => 'datetime',
-            'is_active'     => 'boolean',
-            'sort_order'    => 'integer',
+            'price'           => 'decimal:2',
+            'quantity'        => 'integer',
+            'sold'            => 'integer',
+            'min_per_order'   => 'integer',
+            'max_per_order'   => 'integer',
+            'sales_start'     => 'datetime',
+            'sales_end'       => 'datetime',
+            'is_active'       => 'boolean',
+            'sort_order'      => 'integer',
+            'is_group_ticket' => 'boolean',
+            'group_size'      => 'integer',
         ];
     }
 
@@ -81,9 +84,46 @@ class TicketType extends Model
 
     public function canPurchase(int $qty): bool
     {
-        return $this->isOnSale()
-            && $qty >= $this->min_per_order
+        if (! $this->isOnSale()) {
+            return false;
+        }
+
+        if ($this->isGroupTicket()) {
+            return $qty === $this->group_size
+                && $qty <= $this->availableQuantity();
+        }
+
+        return $qty >= $this->min_per_order
             && $qty <= $this->max_per_order
             && $qty <= $this->availableQuantity();
+    }
+
+    // ── Group ticket helpers ───────────────────────────────────────────────────
+
+    public function isGroupTicket(): bool
+    {
+        return (bool) $this->is_group_ticket;
+    }
+
+    /**
+     * Number of physical tickets generated per purchase unit.
+     * For group tickets this equals group_size; for regular tickets it is 1.
+     */
+    public function getEffectiveQuantity(): int
+    {
+        return $this->isGroupTicket() ? (int) $this->group_size : 1;
+    }
+
+    /**
+     * Total price charged for an order item with the given quantity.
+     * Group tickets are flat-priced regardless of group_size.
+     */
+    public function getTotalPriceForOrder(int $quantity): float
+    {
+        if ($this->isGroupTicket()) {
+            return (float) $this->price;
+        }
+
+        return (float) $this->price * $quantity;
     }
 }

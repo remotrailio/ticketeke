@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\TicketTypes\Schemas;
+namespace App\Filament\Organizer\Resources\TicketTypes\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 
@@ -15,11 +16,6 @@ class TicketTypeForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Select::make('event_id')
-                ->relationship('event', 'title')
-                ->searchable()
-                ->required(),
-
             TextInput::make('name')
                 ->required(),
 
@@ -56,19 +52,21 @@ class TicketTypeForm
                 ->numeric()
                 ->minValue(1)
                 ->default(1)
-                ->required(),
+                ->required()
+                ->visible(fn (Get $get): bool => ! (bool) $get('is_group_ticket')),
 
             TextInput::make('max_per_order')
                 ->numeric()
                 ->default(10)
                 ->rules([
-                    fn (Get $get) => function ($attribute, $value, $fail) use ($get) {
+                    fn (Get $get) => function ($_attribute, $value, $fail) use ($get) {
                         if ((int) $value < (int) $get('min_per_order')) {
                             $fail('Max per order must be greater than or equal to min per order.');
                         }
                     },
                 ])
-                ->required(),
+                ->required()
+                ->visible(fn (Get $get): bool => ! (bool) $get('is_group_ticket')),
 
             DateTimePicker::make('sales_start')
                 ->nullable(),
@@ -84,6 +82,27 @@ class TicketTypeForm
 
             Toggle::make('is_active')
                 ->default(true),
+
+            Section::make('Group Ticket Settings')
+                ->description('Enable this to sell a single ticket covering an entire group at a flat price.')
+                ->schema([
+                    Toggle::make('is_group_ticket')
+                        ->label('Group Ticket')
+                        ->live()
+                        ->default(false),
+
+                    TextInput::make('group_size')
+                        ->label('Group Size')
+                        ->numeric()
+                        ->minValue(1)
+                        ->required(fn (Get $get): bool => (bool) $get('is_group_ticket'))
+                        ->visible(fn (Get $get): bool => (bool) $get('is_group_ticket'))
+                        ->disabled(fn ($record): bool => $record !== null && $record->sold > 0)
+                        ->helperText(fn ($record): ?string => $record?->sold > 0
+                            ? 'Cannot change group size after tickets have been sold.'
+                            : null
+                        ),
+                ]),
         ]);
     }
 }
