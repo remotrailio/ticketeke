@@ -3,9 +3,7 @@
 namespace App\Livewire\Public;
 
 use App\Models\Event;
-use App\Models\TicketType;
 use App\Services\OrderPricingService;
-use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class TicketSelector extends Component
@@ -26,75 +24,59 @@ class TicketSelector extends Component
 
     public function increment(int $ticketTypeId): void
     {
-        $type = $this->event->ticketTypes->firstWhere('id', $ticketTypeId);
+        $type = $this->event->ticketTypes()->find($ticketTypeId);
 
         if (! $type) {
             return;
         }
 
-        $max = $type->isGroupTicket() ? 1 : $type->max_per_order;
+        $isGroup  = $type->isGroupTicket();
+        $step     = $isGroup ? (int) $type->group_size : 1;
+        $maxUnits = ($isGroup ? 1 : (int) $type->max_per_order) * $step;
+
         $this->quantities[$ticketTypeId] = min(
-            ($this->quantities[$ticketTypeId] ?? 0) + ($type->isGroupTicket() ? $type->group_size : 1),
-            $max * ($type->isGroupTicket() ? $type->group_size : 1)
+            ($this->quantities[$ticketTypeId] ?? 0) + $step,
+            $maxUnits
         );
     }
 
     public function decrement(int $ticketTypeId): void
     {
-        $type = $this->event->ticketTypes->firstWhere('id', $ticketTypeId);
+        $type = $this->event->ticketTypes()->find($ticketTypeId);
 
         if (! $type) {
             return;
         }
 
-        $step = $type->isGroupTicket() ? $type->group_size : 1;
+        $step = $type->isGroupTicket() ? (int) $type->group_size : 1;
         $this->quantities[$ticketTypeId] = max(0, ($this->quantities[$ticketTypeId] ?? 0) - $step);
-    }
-
-    public function getSubtotalProperty(): float
-    {
-        return collect($this->quantities)->reduce(function (float $carry, int $qty, int $id) {
-            $type = $this->event->ticketTypes->firstWhere('id', $id);
-            return $carry + ($type ? $type->getTotalPriceForOrder($qty) : 0);
-        }, 0.0);
-    }
-
-    public function getFeeProperty(): float
-    {
-        return app(OrderPricingService::class)->calculatePlatformFee($this->event, $this->subtotal);
-    }
-
-    public function getTotalProperty(): float
-    {
-        return app(OrderPricingService::class)->calculateTotal($this->subtotal, $this->fee);
-    }
-
-    public function getCurrencyProperty(): string
-    {
-        $firstActive = $this->event->ticketTypes->firstWhere('is_active', true);
-        return strtoupper($firstActive?->currency ?? 'KES');
-    }
-
-    public function hasSelection(): bool
-    {
-        return collect($this->quantities)->sum() > 0;
     }
 
     public function proceedToCheckout(): void
     {
-        if (! $this->hasSelection()) {
+        if (! collect($this->quantities)->sum()) {
             return;
         }
 
-        // Redirect to checkout with quantities in session
-        session(['checkout_items' => array_filter($this->quantities)]);
-        session(['checkout_event_id' => $this->event->id]);
+        session([
+            'checkout_items'    => array_filter($this->quantities),
+            'checkout_event_id' => $this->event->id,
+        ]);
 
         $this->redirect(route('checkout.start', $this->event->slug));
     }
 
     public function render()
     {
-        return view('livewire.public.ticket-selector');
+        $ticketTypes = $this->event->ticketTypes()->where('is_active', true)->get();
+        $summary     = app(OrderPricingService::class)
+            ->buildOrderSummary($this->event, $ticketTypes, $this->quantities);
+
+        return view('livewire.public.ticket-selector', [
+            'ticketTypes'  => $ticketTypes,
+            'quantities'   => $this->quantities,
+            'hasSelection' => collect($this->quantities)->sum() > 0,
+            ...$summary,
+        ]);
     }
 }

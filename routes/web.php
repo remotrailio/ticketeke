@@ -8,6 +8,7 @@ use App\Livewire\Public\BrowseEvents;
 use App\Livewire\Public\CheckoutStart;
 use App\Livewire\Public\EventDetails;
 use App\Livewire\Public\Homepage;
+use App\Livewire\Public\OrderConfirmation;
 use App\Livewire\Public\OrganizerProfile;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/checkout/{slug}', CheckoutStart::class)->name('checkout.start');
+    Route::get('/orders/{uuid}/confirmation', OrderConfirmation::class)->name('orders.confirmation');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

@@ -4,7 +4,7 @@
     </div>
 
     <div class="divide-y divide-gray-100">
-        @forelse($event->ticketTypes->where('is_active', true) as $type)
+        @forelse($ticketTypes as $type)
         <div class="px-5 py-4">
             <div class="flex items-start justify-between gap-3">
                 <div class="flex-1 min-w-0">
@@ -60,31 +60,31 @@
     </div>
 
     {{-- Order summary --}}
-    @if($this->hasSelection())
+    @if($hasSelection)
     <div class="border-t border-gray-100 bg-gray-50 px-5 py-4 space-y-2 rounded-b-xl">
         <div class="flex justify-between text-sm text-gray-600">
             <span>Subtotal</span>
-            <span>{{ $this->currency }} {{ number_format($this->subtotal, 2) }}</span>
+            <span>{{ $currency }} {{ number_format($subtotal, 2) }}</span>
         </div>
-        @if($this->fee > 0)
+        @if($fee > 0)
         <div class="flex justify-between text-sm text-gray-500">
             <span>Platform fee</span>
-            <span>{{ $this->currency }} {{ number_format($this->fee, 2) }}</span>
+            <span>{{ $currency }} {{ number_format($fee, 2) }}</span>
         </div>
         @endif
         <div class="flex justify-between border-t border-gray-200 pt-2 text-base font-bold text-gray-900">
             <span>Total</span>
-            <span>{{ $this->currency }} {{ number_format($this->total, 2) }}</span>
+            <span>{{ $currency }} {{ number_format($total, 2) }}</span>
         </div>
     </div>
     @endif
 
     {{-- CTA --}}
-    <div class="px-5 pb-5 @if($this->hasSelection()) pt-3 @else pt-5 @endif">
+    <div class="px-5 pb-5 @if($hasSelection) pt-3 @else pt-5 @endif">
         <button wire:click="proceedToCheckout"
-                @if(!$this->hasSelection()) disabled @endif
+                @if(!$hasSelection) disabled @endif
                 class="w-full rounded-lg bg-indigo-600 py-3 text-sm font-semibold text-white hover:bg-indigo-700 transition disabled:cursor-not-allowed disabled:opacity-50">
-            @if($this->hasSelection())
+            @if($hasSelection)
                 Proceed to Checkout
             @else
                 Select tickets to continue

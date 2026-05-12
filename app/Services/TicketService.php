@@ -9,6 +9,10 @@ class TicketService
 {
     public function generateForOrder(Order $order): void
     {
+        if ($order->tickets()->exists()) {
+            return;
+        }
+
         $order->loadMissing('items.ticketType');
 
         foreach ($order->items as $item) {

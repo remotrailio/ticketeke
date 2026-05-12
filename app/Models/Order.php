@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
     'user_id', 'event_id', 'subtotal', 'fees', 'discount', 'total', 'currency',
     'status', 'payment_status', 'payment_provider', 'payment_reference',
     'payment_method', 'expires_at', 'paid_at',
+    'mpesa_receipt_number', 'mpesa_checkout_request_id', 'mpesa_response',
 ])]
 class Order extends Model
 {
@@ -35,10 +36,11 @@ class Order extends Model
             'fees'           => 'decimal:2',
             'discount'       => 'decimal:2',
             'total'          => 'decimal:2',
-            'status'         => OrderStatus::class,
-            'payment_status' => PaymentStatus::class,
-            'expires_at'     => 'datetime',
-            'paid_at'        => 'datetime',
+            'status'          => OrderStatus::class,
+            'payment_status'  => PaymentStatus::class,
+            'expires_at'      => 'datetime',
+            'paid_at'         => 'datetime',
+            'mpesa_response'  => 'array',
         ];
     }
 
@@ -82,14 +84,16 @@ class Order extends Model
         return (float) ($this->subtotal + $this->fees - $this->discount);
     }
 
-    public function markPaid(string $paymentReference): void
+    public function markPaid(string $paymentReference, ?string $mpesaReceipt = null, ?array $callbackPayload = null): void
     {
-        $this->update([
-            'payment_status'    => PaymentStatus::PAID,
-            'status'            => OrderStatus::COMPLETED,
-            'paid_at'           => now(),
-            'payment_reference' => $paymentReference,
-        ]);
+        $this->update(array_filter([
+            'payment_status'        => PaymentStatus::PAID,
+            'status'                => OrderStatus::COMPLETED,
+            'paid_at'               => now(),
+            'payment_reference'     => $paymentReference,
+            'mpesa_receipt_number'  => $mpesaReceipt,
+            'mpesa_response'        => $callbackPayload,
+        ], fn ($v) => $v !== null));
     }
 
     public function markExpired(): void

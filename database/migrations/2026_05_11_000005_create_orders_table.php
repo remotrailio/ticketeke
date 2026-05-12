@@ -36,6 +36,11 @@ return new class extends Migration
             $table->string('payment_reference')->nullable();
             $table->string('payment_method')->nullable();
 
+            // Mpesa-specific fields
+            $table->string('mpesa_receipt_number')->nullable();
+            $table->string('mpesa_checkout_request_id')->nullable();
+            $table->json('mpesa_response')->nullable();
+
             // Timing
             $table->dateTime('expires_at')->nullable();
             $table->dateTime('paid_at')->nullable();
