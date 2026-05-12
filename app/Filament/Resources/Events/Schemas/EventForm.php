@@ -45,8 +45,9 @@ class EventForm
 
             FileUpload::make('banner_image')
                 ->image()
-                ->disk('public')
-                ->directory('events/banners')
+                ->disk('r2')
+                ->directory(app()->isLocal() ? 'local/events/banners' : 'events/banners')
+                ->visibility('public')
                 ->nullable(),
 
             Toggle::make('is_online')

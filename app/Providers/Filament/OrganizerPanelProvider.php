@@ -6,6 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use App\Filament\Organizer\Pages\OrganizerLogin;
 use App\Filament\Organizer\Widgets\OrganizerStatsWidget;
 use App\Filament\Organizer\Widgets\UpcomingEventsWidget;
 use Filament\Pages\Dashboard;
@@ -26,7 +27,7 @@ class OrganizerPanelProvider extends PanelProvider
         return $panel
             ->id('organizer')
             ->path('organizer')
-            ->login()
+            ->login(OrganizerLogin::class)
             ->colors([
                 'primary' => Color::Amber,
             ])

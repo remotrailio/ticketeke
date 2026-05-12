@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 #[Fillable(['user_id', 'display_name', 'slug', 'bio', 'logo', 'email', 'phone', 'verified', 'status'])]
@@ -38,6 +39,13 @@ class Organizer extends Model
             'verified' => 'boolean',
             'status' => OrganizerStatus::class,
         ];
+    }
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        return $this->logo
+            ? Storage::disk('r2')->url($this->logo)
+            : null;
     }
 
     public function user(): BelongsTo

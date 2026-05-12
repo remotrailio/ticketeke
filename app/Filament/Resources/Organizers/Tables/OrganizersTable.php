@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -15,6 +16,11 @@ class OrganizersTable
     {
         return $table
             ->columns([
+                ImageColumn::make('logo')
+                    ->disk('r2')
+                    ->circular()
+                    ->defaultImageUrl(fn () => 'https://ui-avatars.com/api/?name=O&background=random'),
+
                 TextColumn::make('display_name')
                     ->searchable()
                     ->sortable(),

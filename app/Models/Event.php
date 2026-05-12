@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 #[Fillable([
@@ -55,6 +56,13 @@ class Event extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    public function getBannerUrlAttribute(): ?string
+    {
+        return $this->banner_image
+            ? Storage::disk('r2')->url($this->banner_image)
+            : null;
     }
 
     public function organizer(): BelongsTo
