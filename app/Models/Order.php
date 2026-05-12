@@ -42,8 +42,6 @@ class Order extends Model
         ];
     }
 
-    // ── Relationships ──────────────────────────────────────────────────────────
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -64,8 +62,6 @@ class Order extends Model
         return $this->hasMany(Ticket::class);
     }
 
-    // ── State helpers ──────────────────────────────────────────────────────────
-
     public function isPending(): bool
     {
         return $this->status === OrderStatus::PENDING;
@@ -80,8 +76,6 @@ class Order extends Model
     {
         return $this->payment_status === PaymentStatus::PAID;
     }
-
-    // ── Business logic ─────────────────────────────────────────────────────────
 
     public function calculateTotal(): float
     {
@@ -117,8 +111,6 @@ class Order extends Model
             $item->ticketType()->decrement('sold', $item->quantity);
         }
     }
-
-    // ── Internal ───────────────────────────────────────────────────────────────
 
     protected static function generateOrderNumber(): string
     {

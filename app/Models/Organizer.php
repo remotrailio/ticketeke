@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-#[Fillable(['user_id', 'display_name', 'slug', 'bio', 'logo', 'email', 'phone', 'verified', 'status'])]
+#[Fillable(['user_id', 'display_name', 'slug', 'bio', 'logo', 'banner', 'email', 'phone', 'verified', 'status', 'platform_fee_percentage'])]
 class Organizer extends Model
 {
     use HasFactory;
@@ -36,16 +36,22 @@ class Organizer extends Model
     protected function casts(): array
     {
         return [
-            'verified' => 'boolean',
-            'status' => OrganizerStatus::class,
+            'verified'                 => 'boolean',
+            'status'                   => OrganizerStatus::class,
+            'platform_fee_percentage'  => 'decimal:2',
         ];
     }
 
     public function getLogoUrlAttribute(): ?string
     {
-        return $this->logo
-            ? Storage::disk('r2')->url($this->logo)
-            : null;
+        if (! $this->logo) {
+            return null;
+        }
+
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('r2');
+
+        return $disk->url($this->logo);
     }
 
     public function user(): BelongsTo

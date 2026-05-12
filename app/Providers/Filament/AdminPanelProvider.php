@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\Setting;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -21,7 +22,9 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panel
+        $settings = $this->resolveSettings();
+
+        $panel = $panel
             ->default()
             ->id('admin')
             ->path('admin')
@@ -50,5 +53,20 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+
+        if ($settings) {
+            $panel->brandName(ucfirst($settings->app_name));
+        }
+
+        return $panel;
+    }
+
+    private function resolveSettings(): ?Setting
+    {
+        try {
+            return app_settings();
+        } catch (\Throwable) {
+            return null;
+        }
     }
 }

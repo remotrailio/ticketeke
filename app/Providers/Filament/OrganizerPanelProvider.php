@@ -2,13 +2,14 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Organizer\Pages\OrganizerLogin;
+use App\Filament\Organizer\Widgets\OrganizerStatsWidget;
+use App\Filament\Organizer\Widgets\UpcomingEventsWidget;
+use App\Models\Setting;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use App\Filament\Organizer\Pages\OrganizerLogin;
-use App\Filament\Organizer\Widgets\OrganizerStatsWidget;
-use App\Filament\Organizer\Widgets\UpcomingEventsWidget;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -24,7 +25,9 @@ class OrganizerPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panel
+        $settings = $this->resolveSettings();
+
+        $panel = $panel
             ->id('organizer')
             ->path('organizer')
             ->login(OrganizerLogin::class)
@@ -55,5 +58,20 @@ class OrganizerPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+
+        if ($settings) {
+            $panel->brandName(ucfirst($settings->app_name));
+        }
+
+        return $panel;
+    }
+
+    private function resolveSettings(): ?Setting
+    {
+        try {
+            return app_settings();
+        } catch (\Throwable) {
+            return null;
+        }
     }
 }

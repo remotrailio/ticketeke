@@ -4,16 +4,35 @@ namespace App\Services;
 
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
+use App\Enums\UserRole;
 use App\Models\Event;
 use App\Models\Order;
 use App\Models\TicketType;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use RuntimeException;
 
 class CheckoutService
 {
+    public function __construct(
+        private readonly OrderPricingService $pricing,
+    ) {}
+
+    public function resolveGuestUser(string $email, string $name, ?string $phone = null): User
+    {
+        return User::firstOrCreate(
+            ['email' => $email],
+            [
+                'name'     => $name,
+                'password' => Hash::make(Str::random(16)),
+                'role'     => UserRole::ATTENDEE,
+            ]
+        );
+    }
+
     /**
      * Create a pending order with reserved inventory.
      *
@@ -21,8 +40,11 @@ class CheckoutService
      */
     public function checkout(User $user, Event $event, array $items): Order
     {
+        // Eager-load organizer so fee calculation doesn't N+1 inside the transaction
+        $event->loadMissing('organizer');
+
         return DB::transaction(function () use ($user, $event, $items) {
-            $subtotal   = 0.0;
+            $lineTotals = [];
             $currency   = 'kes';
             $orderItems = [];
 
@@ -38,13 +60,10 @@ class CheckoutService
 
                 $quantity = $item['quantity'];
 
-                // Group tickets: quantity must exactly equal group_size
-                if ($ticketType->isGroupTicket()) {
-                    if ($quantity !== $ticketType->group_size) {
-                        throw new InvalidArgumentException(
-                            "Group ticket [{$ticketType->name}] requires a quantity of exactly {$ticketType->group_size}."
-                        );
-                    }
+                if ($ticketType->isGroupTicket() && $quantity !== $ticketType->group_size) {
+                    throw new InvalidArgumentException(
+                        "Group ticket [{$ticketType->name}] requires a quantity of exactly {$ticketType->group_size}."
+                    );
                 }
 
                 if (! $ticketType->canPurchase($quantity)) {
@@ -54,10 +73,10 @@ class CheckoutService
                     );
                 }
 
-                // Group ticket: flat price per group. Normal ticket: price × quantity.
-                $lineTotal = $ticketType->getTotalPriceForOrder($quantity);
-                $subtotal += $lineTotal;
-                $currency  = $ticketType->currency;
+                // Group tickets: flat price per group. Normal tickets: price × quantity.
+                $lineTotal    = $ticketType->getTotalPriceForOrder($quantity);
+                $lineTotals[] = $lineTotal;
+                $currency     = $ticketType->currency;
 
                 $orderItems[] = [
                     'ticket_type_id' => $ticketType->id,
@@ -70,13 +89,17 @@ class CheckoutService
                 $ticketType->increment('sold', $quantity);
             }
 
+            $subtotal = $this->pricing->calculateSubtotal($lineTotals);
+            $fee      = $this->pricing->calculatePlatformFee($event, $subtotal);
+            $total    = $this->pricing->calculateTotal($subtotal, $fee);
+
             $order = Order::create([
                 'user_id'        => $user->id,
                 'event_id'       => $event->id,
                 'subtotal'       => $subtotal,
-                'fees'           => 0,
+                'fees'           => $fee,
                 'discount'       => 0,
-                'total'          => $subtotal,
+                'total'          => $total,
                 'currency'       => $currency,
                 'status'         => OrderStatus::PENDING,
                 'payment_status' => PaymentStatus::UNPAID,

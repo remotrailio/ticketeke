@@ -73,7 +73,7 @@
         >
             {{-- <input --}}
             {{-- x-bind:class="{ --}}
-            {{-- 'border-gray-300 dark:border-gray-600': ! (@js($statePath) in $wire.__instance.serverMemo.errors), --}}
+            {{-- 'border-gray-300': ! (@js($statePath) in $wire.__instance.serverMemo.errors), --}}
             {{-- 'border-danger-600 ring-danger-600': (@js($statePath) in $wire.__instance.serverMemo.errors), --}}
             {{-- }" --}}
             {{-- {{ --}}
@@ -99,7 +99,7 @@
             {{-- $applyStateBindingModifiers('wire:model') => (! $isLocation) ? $statePath : null, --}}
             {{-- ], escape: false) --}}
             {{-- ->class([ --}}
-            {{-- 'filament-forms-input block w-full transition duration-75 shadow-sm outline-none sm:text-sm focus:relative focus:z-[1] focus:ring-1 focus:ring-inset disabled:opacity-70 dark:bg-gray-700 dark:text-white', --}}
+            {{-- 'filament-forms-input block w-full transition duration-75 shadow-sm outline-none sm:text-sm focus:relative focus:z-[1] focus:ring-1 focus:ring-inset disabled:opacity-70', --}}
             {{-- 'rounded-s-lg' => ! ($prefixLabel || $prefixIcon), --}}
             {{-- 'rounded-e-lg' => ! ($suffixLabel || $suffixIcon), --}}
             {{-- ]) --}}

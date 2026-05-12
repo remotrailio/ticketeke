@@ -16,6 +16,12 @@ class OrganizersTable
     {
         return $table
             ->columns([
+                ImageColumn::make('banner')
+                    ->disk('r2')
+                    ->width(120)
+                    ->imageHeight(40)
+                    ->extraImgAttributes(['class' => 'object-cover rounded']),
+
                 ImageColumn::make('logo')
                     ->disk('r2')
                     ->circular()
@@ -31,6 +37,10 @@ class OrganizersTable
                     ->searchable(),
                 TextColumn::make('email')
                     ->searchable(),
+                TextColumn::make('platform_fee_percentage')
+                    ->label('Fee %')
+                    ->suffix('%')
+                    ->sortable(),
                 TextColumn::make('status')
                     ->badge(),
                 IconColumn::make('verified')

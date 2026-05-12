@@ -34,8 +34,6 @@ class Ticket extends Model
         ];
     }
 
-    // ── Relationships ──────────────────────────────────────────────────────────
-
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
@@ -51,8 +49,6 @@ class Ticket extends Model
         return $this->belongsTo(User::class);
     }
 
-    // ── Business logic ─────────────────────────────────────────────────────────
-
     public function checkIn(): bool
     {
         if ($this->checked_in_at !== null) {
@@ -66,8 +62,6 @@ class Ticket extends Model
 
         return true;
     }
-
-    // ── Internal ───────────────────────────────────────────────────────────────
 
     protected static function generateTicketCode(): string
     {

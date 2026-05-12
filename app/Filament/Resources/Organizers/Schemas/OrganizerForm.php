@@ -8,14 +8,13 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 
 class OrganizerForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $editOnly = fn (Get $get, string $operation): bool => $operation === 'edit';
+        $editOnly = fn (string $operation): bool => $operation === 'edit';
 
         return $schema->components([
             TextInput::make('display_name')
@@ -40,6 +39,15 @@ class OrganizerForm
                 ->nullable()
                 ->disabled($editOnly)
                 ->dehydrated(false),
+            FileUpload::make('banner')
+                ->label('Banner Image')
+                ->image()
+                ->disk('r2')
+                ->directory(app()->isLocal() ? 'local/organizers/banner' : 'organizers/banner')
+                ->visibility('public')
+                ->nullable()
+                ->disabled($editOnly)
+                ->dehydrated(false),
             TextInput::make('email')
                 ->email()
                 ->nullable()
@@ -49,6 +57,15 @@ class OrganizerForm
                 ->nullable()
                 ->disabled($editOnly)
                 ->dehydrated(false),
+            TextInput::make('platform_fee_percentage')
+                ->label('Platform Fee (%)')
+                ->numeric()
+                ->minValue(0)
+                ->maxValue(100)
+                ->step(0.01)
+                ->suffix('%')
+                ->default(10)
+                ->required(),
             Toggle::make('verified')
                 ->default(false),
             Select::make('status')

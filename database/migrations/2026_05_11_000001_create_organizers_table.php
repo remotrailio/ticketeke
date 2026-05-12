@@ -15,10 +15,12 @@ return new class extends Migration
             $table->string('display_name');
             $table->string('slug')->unique();
             $table->text('bio')->nullable();
+            $table->string('banner')->nullable();
             $table->string('logo')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->boolean('verified')->default(false);
+            $table->decimal('platform_fee_percentage', 5, 2)->default(10);
             $table->enum('status', ['active', 'suspended'])->default('active');
             $table->timestamps();
         });

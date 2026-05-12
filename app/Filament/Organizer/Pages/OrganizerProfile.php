@@ -114,6 +114,16 @@ class OrganizerProfile extends Page
                 ->visibility('public')
                 ->nullable(),
 
+            FileUpload::make('banner')
+                ->label('Banner Image')
+                ->image()
+                ->imageEditor()
+                ->maxSize(4096)
+                ->disk('r2')
+                ->directory(app()->isLocal() ? 'local/organizers/banner' : 'organizers/banner')
+                ->visibility('public')
+                ->nullable(),
+
             TextInput::make('email')
                 ->email()
                 ->nullable(),
