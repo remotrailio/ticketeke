@@ -87,12 +87,11 @@ class Order extends Model
     public function markPaid(string $paymentReference, ?string $mpesaReceipt = null, ?array $callbackPayload = null): void
     {
         $this->update(array_filter([
-            'payment_status'        => PaymentStatus::PAID,
-            'status'                => OrderStatus::COMPLETED,
-            'paid_at'               => now(),
-            'payment_reference'     => $paymentReference,
-            'mpesa_receipt_number'  => $mpesaReceipt,
-            'mpesa_response'        => $callbackPayload,
+            'payment_status'       => PaymentStatus::PAID,
+            'paid_at'              => now(),
+            'payment_reference'    => $paymentReference,
+            'mpesa_receipt_number' => $mpesaReceipt,
+            'mpesa_response'       => $callbackPayload,
         ], fn ($v) => $v !== null));
     }
 

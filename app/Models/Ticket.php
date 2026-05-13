@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 
 #[Fillable([
     'order_id', 'order_item_id', 'user_id',
+    'attendee_name', 'attendee_email',
     'ticket_code', 'qr_code', 'status', 'checked_in_at',
 ])]
 class Ticket extends Model
@@ -66,7 +67,12 @@ class Ticket extends Model
     protected static function generateTicketCode(): string
     {
         do {
-            $code = strtoupper(Str::random(12));
+            // Format: TKT-XXXX-XXXX-XXXX — uppercase alphanumeric, globally unique.
+            // Each segment uses Str::random which draws from [a-zA-Z0-9].
+            $code = 'TKT-'
+                . strtoupper(Str::random(4)) . '-'
+                . strtoupper(Str::random(4)) . '-'
+                . strtoupper(Str::random(4));
         } while (static::where('ticket_code', $code)->exists());
 
         return $code;

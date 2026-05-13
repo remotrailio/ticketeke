@@ -43,7 +43,9 @@ class MpesaService
             'Password'          => $password,
             'Timestamp'         => $timestamp,
             'TransactionType'   => 'CustomerPayBillOnline',
-            'Amount'            => (int) ceil((float) $order->total),
+            'Amount'            => config('mpesa.env') === 'production'
+                ? (string) (int) ceil((float) $order->total)
+                : '1',
             'PartyA'            => $phone,
             'PartyB'            => config('mpesa.shortcode'),
             'PhoneNumber'       => $phone,
@@ -53,9 +55,11 @@ class MpesaService
         ];
 
         Log::info('M-Pesa STK push request', [
-            'order'  => $order->order_number,
-            'phone'  => $phone,
-            'amount' => $payload['Amount'],
+            'order'       => $order->order_number,
+            'phone'       => $phone,
+            'amount_sent' => $payload['Amount'],
+            'order_total' => (int) ceil((float) $order->total),
+            'sandbox'     => config('mpesa.env') !== 'production',
         ]);
 
         try {

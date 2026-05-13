@@ -31,7 +31,7 @@
     {{-- JSON-LD hook --}}
     @stack('schema-org')
 </head>
-<body class="min-h-screen bg-white text-gray-900 antialiased">
+<body class="min-h-screen bg-white text-gray-900 antialiased flex flex-col">
 
     {{-- Navigation --}}
     <nav class="border-b border-gray-100 bg-white" x-data="{ open: false }">
@@ -101,12 +101,12 @@
     </nav>
 
     {{-- Page content --}}
-    <main>
+    <main class="flex-1">
         {{ $slot }}
     </main>
 
     {{-- Footer --}}
-    <footer class="mt-24 border-t border-gray-100 bg-gray-50">
+    <footer class="border-t border-gray-100 bg-gray-50">
         <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
                 @if($__settings->logo_url)

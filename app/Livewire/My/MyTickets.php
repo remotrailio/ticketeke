@@ -14,7 +14,7 @@ class MyTickets extends Component
 
     public function render()
     {
-        $tickets = Ticket::with(['order.event', 'ticketType'])
+        $tickets = Ticket::with(['order.event', 'orderItem.ticketType'])
             ->whereHas('order', fn ($q) => $q->where('user_id', auth()->id()))
             ->latest()
             ->paginate(12);

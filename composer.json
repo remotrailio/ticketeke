@@ -7,11 +7,14 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "barryvdh/laravel-dompdf": "^3.1",
         "cheesegrits/filament-google-maps": "^5.0",
         "filament/filament": "^5.0",
         "laravel/framework": "^13.7",
         "laravel/tinker": "^3.0",
-        "league/flysystem-aws-s3-v3": "^3.32"
+        "league/flysystem-aws-s3-v3": "^3.32",
+        "resend/resend-laravel": "^1.4",
+        "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

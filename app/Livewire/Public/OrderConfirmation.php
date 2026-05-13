@@ -14,7 +14,7 @@ class OrderConfirmation extends Component
 
     public function mount(string $uuid): void
     {
-        $this->order = Order::with(['items.ticketType', 'tickets', 'event'])
+        $this->order = Order::with(['items.ticketType', 'tickets.orderItem.ticketType', 'event'])
             ->where('uuid', $uuid)
             ->where('user_id', Auth::id())
             ->firstOrFail();

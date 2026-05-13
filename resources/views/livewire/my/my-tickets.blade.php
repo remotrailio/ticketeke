@@ -21,11 +21,11 @@
                 <div class="flex-1 min-w-0">
                     <p class="font-semibold text-gray-900 truncate">{{ $event?->title ?? 'Unknown Event' }}</p>
                     <p class="text-sm text-gray-500">
-                        {{ $ticket->ticketType?->name }}
+                        {{ $ticket->orderItem?->ticketType?->name }}
                         · #{{ $ticket->ticket_code }}
                     </p>
-                    @if($event?->start_at)
-                    <p class="text-xs text-gray-400 mt-0.5">{{ $event->start_at->format('D, d M Y · H:i') }}</p>
+                    @if($event?->starts_at)
+                    <p class="text-xs text-gray-400 mt-0.5">{{ $event->starts_at->format('D, d M Y · H:i') }}</p>
                     @endif
                 </div>
                 <div class="shrink-0 text-right">
