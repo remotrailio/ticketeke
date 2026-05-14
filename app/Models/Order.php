@@ -88,11 +88,18 @@ class Order extends Model
     {
         $this->update(array_filter([
             'payment_status'       => PaymentStatus::PAID,
+            'status'               => OrderStatus::COMPLETED,
             'paid_at'              => now(),
             'payment_reference'    => $paymentReference,
             'mpesa_receipt_number' => $mpesaReceipt,
             'mpesa_response'       => $callbackPayload,
         ], fn ($v) => $v !== null));
+
+        // sold only increments on confirmed payment, never at reservation time
+        $this->loadMissing('items.ticketType');
+        foreach ($this->items as $item) {
+            $item->ticketType()->increment('sold', $item->quantity);
+        }
     }
 
     public function markExpired(): void
@@ -101,9 +108,6 @@ class Order extends Model
             'status'         => OrderStatus::EXPIRED,
             'payment_status' => PaymentStatus::FAILED,
         ]);
-
-        // Inventory will be released by a scheduled job or observer
-        // Call $this->releaseInventory() when that pipeline is ready
     }
 
     public function releaseInventory(): void

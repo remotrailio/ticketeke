@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\OrganizerOnboardingController;
+use App\Http\Controllers\TicketVerificationController;
 use App\Livewire\My\MyOrders;
 use App\Livewire\My\MyProfile;
 use App\Livewire\My\MyTickets;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', Homepage::class)->name('home');
 Route::get('/events', BrowseEvents::class)->name('events.index');
+Route::redirect('/browse', '/events');
 Route::get('/events/{slug}', EventDetails::class)->name('events.show');
 Route::get('/organizers/{slug}', OrganizerProfile::class)->name('organizers.show');
 Route::get('/categories/{category}', function (Category $category) {
@@ -39,5 +41,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/become-organizer', [OrganizerOnboardingController::class, 'store'])
         ->name('organizer.onboard.store');
 });
+
+// Check-in: no auth required — staff scan from any device via signed URL
+Route::get('/check-in/{ticket_code}', TicketVerificationController::class)
+    ->name('tickets.verify')
+    ->middleware('signed');
 
 require __DIR__.'/auth.php';

@@ -3,8 +3,9 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Organizer\Pages\OrganizerLogin;
+use App\Filament\Organizer\Widgets\OrganizerOrderStatusChartWidget;
+use App\Filament\Organizer\Widgets\OrganizerRevenueChartWidget;
 use App\Filament\Organizer\Widgets\OrganizerStatsWidget;
-use App\Filament\Organizer\Widgets\UpcomingEventsWidget;
 use App\Models\Setting;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -42,7 +43,8 @@ class OrganizerPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Organizer/Widgets'), for: 'App\Filament\Organizer\Widgets')
             ->widgets([
                 OrganizerStatsWidget::class,
-                UpcomingEventsWidget::class,
+                OrganizerRevenueChartWidget::class,
+                OrganizerOrderStatusChartWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

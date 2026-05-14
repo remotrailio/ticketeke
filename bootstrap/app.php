@@ -17,5 +17,13 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Illuminate\Routing\Exceptions\InvalidSignatureException $e, $request) {
+            $payload = ['valid' => false, 'message' => 'Invalid or expired QR code.'];
+
+            if ($request->wantsJson()) {
+                return response()->json($payload, 403);
+            }
+
+            return response()->view('checkin.result', $payload, 403);
+        });
     })->create();

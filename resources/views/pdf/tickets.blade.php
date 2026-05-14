@@ -106,14 +106,14 @@
         }
 
         .qr-section {
-            width: 110px;
+            width: 150px;
             text-align: center;
-            padding-left: 20px;
+            padding-left: 16px;
         }
 
         .qr-section img {
-            width: 100px;
-            height: 100px;
+            width: 140px;
+            height: 140px;
         }
 
         .qr-label {
@@ -212,7 +212,16 @@
     @php
         $event    = $order->event;
         $typeName = $ticket->orderItem?->ticketType?->name ?? 'General Admission';
-        $qr       = base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(130)->margin(0)->generate($ticket->ticket_code));
+
+        // QR encodes a signed URL — tamper-proof, expires when the event ends (+ 1 day grace).
+        // Never encode raw IDs; ticket_code is the only external identifier.
+        $qrExpiry   = $event->ends_at?->addDay() ?? now()->addDays(30);
+        $qrUrl      = \Illuminate\Support\Facades\URL::temporarySignedRoute(
+            'tickets.verify',
+            $qrExpiry,
+            ['ticket_code' => $ticket->ticket_code]
+        );
+        $qr = base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(400)->margin(3)->errorCorrection('M')->generate($qrUrl));
     @endphp
 
     <div class="ticket-wrap">

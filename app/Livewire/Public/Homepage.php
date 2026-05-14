@@ -34,6 +34,17 @@ class Homepage extends Component
             ->orderBy('sort_order')
             ->get();
 
-        return view('livewire.public.homepage', compact('featured', 'upcoming', 'categories'));
+        $heroCategories = Category::where('is_active', true)
+            ->withCount(['events' => fn ($q) => $q
+                ->where('status', EventStatus::PUBLISHED)
+                ->where('visibility', EventVisibility::PUBLIC)
+                ->where('start_at', '>=', now())
+            ])
+            ->having('events_count', '>', 0)
+            ->orderByDesc('events_count')
+            ->limit(5)
+            ->get();
+
+        return view('livewire.public.homepage', compact('featured', 'upcoming', 'categories', 'heroCategories'));
     }
 }
