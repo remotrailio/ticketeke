@@ -5,7 +5,6 @@ namespace App\Filament\Widgets;
 use App\Enums\PaymentStatus;
 use App\Models\Order;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Carbon;
 
 class RevenueChartWidget extends ChartWidget
 {
@@ -49,8 +48,8 @@ class RevenueChartWidget extends ChartWidget
                 [
                     'label'           => 'Revenue (KES)',
                     'data'            => $data,
-                    'borderColor'     => '#f59e0b',
-                    'backgroundColor' => 'rgba(245, 158, 11, 0.1)',
+                    'borderColor'     => '#2563EB',
+                    'backgroundColor' => 'rgba(37, 99, 235, 0.1)',
                     'fill'            => true,
                     'tension'         => 0.4,
                 ],

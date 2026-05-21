@@ -21,10 +21,10 @@ class OrganizerRevenueChartWidget extends ChartWidget
 
     protected function getData(): array
     {
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User|null $user */
         $user = auth()->user();
 
-        $organizer = $user->organizer;
+        $organizer = $user?->organizer;
 
         if (! $organizer) {
             return ['labels' => [], 'datasets' => []];
@@ -58,8 +58,8 @@ class OrganizerRevenueChartWidget extends ChartWidget
                 [
                     'label'           => 'Revenue (KES)',
                     'data'            => $data,
-                    'borderColor'     => '#f59e0b',
-                    'backgroundColor' => 'rgba(245, 158, 11, 0.1)',
+                    'borderColor'     => '#2563EB',
+                    'backgroundColor' => 'rgba(37, 99, 235, 0.1)',
                     'fill'            => true,
                     'tension'         => 0.4,
                 ],
