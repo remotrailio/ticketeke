@@ -1,22 +1,16 @@
 <div>
-    {{-- Hero --}}
-    <section class="relative py-24 md:py-32"
-        style="background-image: linear-gradient(rgba(0,0,0,0.52), rgba(0,0,0,0.52)), url('https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=1600'); background-size: cover; background-position: center;">
-        <div class="container mx-auto px-4">
+    <section class="relative py-24 md:py-32" style="background-image: linear-gradient(rgba(0,0,0,0.52), rgba(0,0,0,0.52)), url('https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=1600'); background-size: cover; background-position: center;">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mx-auto max-w-3xl text-center text-white">
-
-                {{-- Title --}}
                 <h1 class="mb-6 font-heading text-4xl font-bold tracking-tight md:text-6xl">
                     Discover Amazing Events &amp; Experiences in Kenya
                 </h1>
 
-                {{-- Subtitle --}}
                 <p class="mb-8 text-xl text-white/90 md:text-2xl">
                     From safaris to music festivals, explore the best events and create unforgettable memories
                 </p>
 
-                {{-- Search bar --}}
-                <div class="relative mx-auto mb-6 max-w-xl">
+                <div class="relative mx-auto mb-6">
                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                         <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
@@ -26,11 +20,10 @@
                     </div>
                     <form action="{{ route('events.index') }}" method="GET">
                         <input type="search" name="q" placeholder="Search events, experiences, safaris..."
-                            class="h-12 w-full rounded-md border border-gray-200 bg-white pl-12 pr-4 text-base text-gray-900 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400/20">
+                            class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 flex w-full min-w-0 rounded-md border px-3 py-1 transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive pl-12 h-12 text-base bg-white border-border shadow-sm border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400/20">
                     </form>
                 </div>
 
-                {{-- Quick category buttons --}}
                 @if ($heroCategories->isNotEmpty())
                     <div class="flex flex-wrap items-center justify-center gap-2">
                         @foreach ($heroCategories as $cat)
@@ -41,7 +34,6 @@
                         @endforeach
                     </div>
                 @endif
-
             </div>
         </div>
     </section>
@@ -72,8 +64,7 @@
                         <h2 class="font-heading text-2xl font-bold text-gray-900">Featured Events</h2>
                         <p class="mt-1 text-sm text-gray-500">Hand-picked experiences you don't want to miss</p>
                     </div>
-                    <a href="{{ route('events.index') }}"
-                        class="hidden sm:inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 transition-all hover:bg-gray-100 hover:text-gray-900 h-9">
+                    <a href="{{ route('events.index') }}" class="hidden sm:inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 transition-all hover:bg-gray-100 hover:text-gray-900 h-9">
                         View All
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

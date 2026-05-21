@@ -40,7 +40,7 @@
 
             {{-- CTA buttons --}}
             <div class="flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <a href="{{ route('organizer.onboard') }}"
+                <a href="{{ route('organizers.become') }}#signup"
                     class="inline-flex items-center gap-2 rounded-lg bg-white px-8 py-3 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-50">
                     Become an Organizer
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

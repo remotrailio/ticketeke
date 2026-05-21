@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
 
 #[Fillable([
     'organizer_id', 'category_id', 'title', 'slug', 'excerpt', 'description',
-    'banner_image', 'venue_name', 'venue_address', 'city', 'country',
+    'banner_image', 'venue_name', 'venue_address', 'destination_id', 'country',
     'latitude', 'longitude', 'is_online', 'meeting_url',
     'timezone', 'start_at', 'end_at', 'visibility', 'status', 'published_at',
 ])]
@@ -74,6 +74,11 @@ class Event extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function destination(): BelongsTo
+    {
+        return $this->belongsTo(Destination::class);
     }
 
     public function ticketTypes(): HasMany

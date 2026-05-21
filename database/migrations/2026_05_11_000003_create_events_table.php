@@ -27,7 +27,7 @@ return new class extends Migration
             // Location
             $table->string('venue_name')->nullable();
             $table->string('venue_address')->nullable();
-            $table->string('city')->nullable();
+            $table->foreignId('destination_id')->nullable()->constrained('destinations')->nullOnDelete();
             $table->string('country')->nullable();
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();

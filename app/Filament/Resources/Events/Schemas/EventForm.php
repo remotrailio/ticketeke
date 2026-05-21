@@ -67,8 +67,20 @@ class EventForm
             TextInput::make('venue_address')
                 ->nullable(),
 
-            TextInput::make('city')
-                ->nullable(),
+            Select::make('destination_id')
+                ->label('City')
+                ->relationship('destination', 'name')
+                ->searchable()
+                ->preload()
+                ->nullable()
+                ->createOptionForm([
+                    TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
+                ])
+                ->createOptionUsing(function (array $data): int {
+                    return \App\Models\Destination::create($data)->id;
+                }),
 
             Select::make('country')
                 ->options(Country::options())

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Categories\Schemas;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -27,6 +28,13 @@ class CategoryForm
             TextInput::make('color')
                 ->required()
                 ->helperText('Tailwind color name, e.g. purple, blue, green'),
+            FileUpload::make('image_path')
+                ->label('Image')
+                ->image()
+                ->disk('r2')
+                ->directory(app()->isLocal() ? 'local/categories' : 'categories')
+                ->visibility('public')
+                ->nullable(),
             TextInput::make('sort_order')
                 ->numeric()
                 ->default(0)

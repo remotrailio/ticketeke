@@ -5,6 +5,7 @@ use App\Http\Controllers\TicketVerificationController;
 use App\Livewire\My\MyOrders;
 use App\Livewire\My\MyProfile;
 use App\Livewire\My\MyTickets;
+use App\Livewire\Public\BecomeOrganizer;
 use App\Livewire\Public\BrowseEvents;
 use App\Livewire\Public\CheckoutStart;
 use App\Livewire\Public\EventDetails;
@@ -15,6 +16,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Homepage::class)->name('home');
+Route::get('/for-organizers', BecomeOrganizer::class)->name('organizers.become');
 Route::get('/events', BrowseEvents::class)->name('events.index');
 Route::redirect('/browse', '/events');
 Route::get('/events/{slug}', EventDetails::class)->name('events.show');

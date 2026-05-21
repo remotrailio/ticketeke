@@ -1,25 +1,20 @@
 <?php
 
-namespace App\Filament\Resources\Categories\Tables;
+namespace App\Filament\Resources\Destinations\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
-class CategoriesTable
+class DestinationsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('sort_order')
-                    ->label('#')
-                    ->sortable(),
                 ImageColumn::make('image_path')
                     ->label('Image')
                     ->disk('r2')
@@ -27,23 +22,16 @@ class CategoriesTable
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('slug')
-                    ->searchable(),
-                TextColumn::make('icon'),
-                TextColumn::make('color'),
-                IconColumn::make('is_active')
-                    ->boolean()
-                    ->label('Active'),
+                TextColumn::make('uuid')
+                    ->label('UUID')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('sort_order')
-            ->filters([
-                TernaryFilter::make('is_active')
-                    ->label('Active'),
-            ])
+            ->defaultSort('name')
             ->recordActions([
                 EditAction::make(),
             ])

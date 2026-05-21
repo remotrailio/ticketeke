@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Events\Tables;
 use App\Enums\EventStatus;
 use App\Enums\EventVisibility;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -15,6 +16,10 @@ class EventsTable
     {
         return $table
             ->columns([
+                ImageColumn::make('banner_image')
+                    ->label('Image')
+                    ->disk('r2')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
@@ -32,7 +37,11 @@ class EventsTable
                 TextColumn::make('start_at')
                     ->dateTime()
                     ->sortable(),
-                TextColumn::make('city')
+                TextColumn::make('end_at')
+                    ->dateTime()
+                    ->sortable(),
+                TextColumn::make('destination.name')
+                    ->label('City')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()

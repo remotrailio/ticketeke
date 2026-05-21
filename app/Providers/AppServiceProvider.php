@@ -18,5 +18,7 @@ class AppServiceProvider extends ServiceProvider
         if ($override = config('mail.to_override')) {
             Mail::alwaysTo($override);
         }
+
+        View::share('__settings', app_settings());
     }
 }

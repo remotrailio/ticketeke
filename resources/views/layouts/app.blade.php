@@ -1,4 +1,3 @@
-@php $__settings = app_settings(); @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -37,15 +36,12 @@
     @stack('schema-org')
 </head>
 <body class="min-h-screen bg-white font-sans text-gray-900 antialiased flex flex-col">
-
-    {{-- Navigation --}}
     <nav class="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm"
          x-data="{ open: false }"
          x-init="$watch('open', v => document.body.classList.toggle('overflow-hidden', v))"
          @keydown.escape.window="open = false">
-        <div class="container mx-auto px-4">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 items-center justify-between">
-
                 {{-- Section 1: Logo + Section 2: Links (grouped left) --}}
                 <div class="flex items-center">
                     {{-- Logo --}}
@@ -68,7 +64,10 @@
                                 <a href="{{ url('/admin') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900">Admin</a>
                             @else
                                 <a href="{{ route('my.tickets') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900">My Tickets</a>
+                                <a href="{{ route('organizers.become') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900">Become an Organizer</a>
                             @endif
+                        @else
+                            <a href="{{ route('organizers.become') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900">Become an Organizer</a>
                         @endauth
                     </div>
                 </div>
@@ -197,8 +196,7 @@
 
             {{-- Nav links --}}
             <div class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-                <a href="{{ route('events.index') }}" @click="open = false"
-                   class="block rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Browse Events</a>
+                <a href="{{ route('events.index') }}" @click="open = false" class="block rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Browse Events</a>
                 @auth
                     @if(auth()->user()->isOrganizer())
                         <a href="{{ url('/organizer') }}" @click="open = false"
@@ -209,10 +207,14 @@
                     @else
                         <a href="{{ route('my.tickets') }}" @click="open = false"
                            class="block rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">My Tickets</a>
+                        <a href="{{ route('organizers.become') }}" @click="open = false"
+                           class="block rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Become an Organizer</a>
                     @endif
                 @else
                     <a href="{{ route('login') }}" @click="open = false"
                        class="block rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Log in</a>
+                    <a href="{{ route('organizers.become') }}" @click="open = false"
+                       class="block rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Become an Organizer</a>
                 @endauth
             </div>
 

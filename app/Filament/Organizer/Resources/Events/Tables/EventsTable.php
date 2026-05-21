@@ -10,6 +10,7 @@ use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -20,6 +21,10 @@ class EventsTable
     {
         return $table
             ->columns([
+                ImageColumn::make('banner_image')
+                    ->label('Image')
+                    ->disk('r2')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
@@ -33,7 +38,8 @@ class EventsTable
                 TextColumn::make('start_at')
                     ->dateTime()
                     ->sortable(),
-                TextColumn::make('city')
+                TextColumn::make('destination.name')
+                    ->label('City')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('start_at', 'desc')
