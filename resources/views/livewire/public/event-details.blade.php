@@ -7,7 +7,7 @@
         </div>
     @endif
 
-    <div class="container mx-auto px-4 py-10 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div class="lg:grid lg:grid-cols-3 lg:gap-12">
 
             {{-- Main content --}}

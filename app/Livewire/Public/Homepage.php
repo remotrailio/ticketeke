@@ -15,6 +15,7 @@ class Homepage extends Component
     public function render()
     {
         $featured = Event::with(['organizer', 'category'])
+            ->withCount('attendees')
             ->where('status', EventStatus::PUBLISHED)
             ->where('visibility', EventVisibility::PUBLIC)
             ->where('end_at', '>=', now())
@@ -23,6 +24,7 @@ class Homepage extends Component
             ->get();
 
         $upcoming = Event::with(['organizer', 'category'])
+            ->withCount('attendees')
             ->where('status', EventStatus::PUBLISHED)
             ->where('visibility', EventVisibility::PUBLIC)
             ->where('end_at', '>=', now())

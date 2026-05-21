@@ -1,7 +1,7 @@
 <div>
     {{-- Hero --}}
     <section class="relative py-24 md:py-32" style="background-image: linear-gradient(rgba(0,0,0,0.50), rgba(0,0,0,0.50)), url('https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=1600'); background-size: cover; background-position: center;">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="mx-auto max-w-3xl text-center text-white">
                 <h1 class="mb-6 font-heading text-4xl font-bold tracking-tight md:text-6xl">
                     Discover Amazing Events &amp; Experiences in Kenya
@@ -41,11 +41,11 @@
     {{-- Categories --}}
     @if ($categories->isNotEmpty())
         <section class="py-12 bg-white border-b border-slate-100">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <h2 class="text-lg font-semibold text-slate-700 mb-6">Browse by Category</h2>
                 <div class="flex flex-wrap gap-3">
                     @foreach ($categories as $cat)
-                        <a href="{{ route('events.index', ['category' => $cat->slug]) }}"
+                        <a href="{{ route('events.index', ['selectedCategories[]' => $cat->slug]) }}"
                             class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-all">
                             {{ $cat->name }}
                         </a>
@@ -58,7 +58,7 @@
     {{-- Featured Events --}}
     @if ($featured->isNotEmpty())
         <section class="py-16 bg-slate-50">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="mb-8 flex items-end justify-between">
                     <div>
                         <h2 class="font-heading text-2xl font-bold text-slate-900">Featured Events</h2>
@@ -84,7 +84,7 @@
     {{-- Upcoming Events --}}
     @if ($upcoming->isNotEmpty())
         <section class="py-16 bg-indigo-50">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="mb-8 flex items-center justify-between">
                     <h2 class="text-2xl font-bold text-slate-900">Upcoming Events</h2>
                     <a href="{{ route('events.index', ['sort' => 'start_at']) }}"

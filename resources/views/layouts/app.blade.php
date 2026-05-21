@@ -36,7 +36,7 @@
          x-data="{ open: false }"
          x-init="$watch('open', v => document.body.classList.toggle('overflow-hidden', v))"
          @keydown.escape.window="open = false">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 items-center justify-between">
 
                 <div class="flex items-center">
@@ -227,7 +227,7 @@
     </main>
 
     <footer class="border-t border-slate-200 bg-white">
-        <div class="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
                 @if($__settings->logo_url)
                     <img src="{{ $__settings->logo_url }}" alt="{{ $__settings->app_name }}" class="h-8 w-auto">

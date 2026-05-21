@@ -1,5 +1,5 @@
 <section class="py-20" style="background: linear-gradient(135deg, #1d4ed8, #2563EB, #7c3aed);">
-    <div class="container mx-auto px-4">
+    <div class="mx-auto max-w-7xl px-4">
         <div class="mx-auto max-w-3xl text-center">
 
             {{-- Badge --}}

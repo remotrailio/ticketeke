@@ -2,7 +2,7 @@
 
     {{-- Hero / Search header --}}
     <div class="border-b border-slate-200 bg-white shadow-sm">
-        <div class="container mx-auto px-4 py-10 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold tracking-tight text-slate-900">Browse Events</h1>
             <p class="mt-1 text-sm text-slate-500">Find your next unforgettable experience in Kenya.</p>
             @include('livewire.public.partials.search-bar')
@@ -10,7 +10,7 @@
     </div>
 
     {{-- Page body --}}
-    <div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div class="flex gap-8">
 
             {{-- Sidebar (desktop) --}}

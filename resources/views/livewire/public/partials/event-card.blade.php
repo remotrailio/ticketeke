@@ -1,15 +1,16 @@
 @php
     $lowestPrice = $event->ticketTypes->min('price');
     $showFeatured = $featured ?? false;
+    $eventUrl = route('events.show', $event->slug);
 @endphp
 
-<div class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/60">
-    <a href="{{ route('events.show', $event->slug) }}" class="relative block aspect-[16/10] overflow-hidden">
+<a href="{{ $eventUrl }}" class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/60">
+    <div class="relative aspect-16/10 overflow-hidden">
         @if ($event->banner_url)
             <img src="{{ $event->banner_url }}" alt="{{ $event->title }}"
                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
         @else
-            <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-50 to-blue-100">
+            <div class="flex h-full w-full items-center justify-center bg-linear-to-br from-indigo-50 to-blue-100">
                 <svg class="h-12 w-12 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -28,10 +29,10 @@
                 {{ $event->category->name }}
             </span>
         @endif
-    </a>
+    </div>
 
     <div class="p-4 space-y-3">
-        <h3 class="line-clamp-2 min-h-[3rem] font-semibold text-slate-900">{{ $event->title }}</h3>
+        <h3 class="line-clamp-2 min-h-12 font-semibold text-slate-900">{{ $event->title }}</h3>
         <div class="space-y-2">
             <div class="flex items-start gap-2 text-sm text-slate-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mt-0.5 shrink-0 text-blue-400" fill="none"
@@ -64,6 +65,7 @@
                 </div>
             @endif
 
+            @if (($event->attendees_count ?? 0) > 0)
             <div class="flex items-center gap-2 text-sm text-slate-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0 text-blue-400" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -72,22 +74,18 @@
                     <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
-                <span>{{ $event->attendees_count }} attending</span>
+                <span>{{ number_format($event->attendees_count) }} attending</span>
             </div>
+            @endif
         </div>
 
-        <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-            <div>
-                @if (is_null($lowestPrice) || $lowestPrice == 0)
-                    <span class="text-sm font-bold text-emerald-600">Free</span>
-                @else
-                    <span class="text-sm text-slate-400">From</span>
-                    <span class="text-lg font-semibold text-slate-900"> KES {{ number_format($lowestPrice) }}</span>
-                @endif
-            </div>
-            <a href="{{ route('events.show', $event->slug) }}" class="rounded-xl bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-violet-500">
-                Get Tickets
-            </a>
+        <div class="pt-2 border-t border-slate-100">
+            @if (is_null($lowestPrice) || $lowestPrice == 0)
+                <span class="text-sm font-bold text-emerald-600">Free</span>
+            @else
+                <span class="text-sm text-slate-400">From</span>
+                <span class="text-lg font-semibold text-slate-900"> KES {{ number_format($lowestPrice) }}</span>
+            @endif
         </div>
     </div>
-</div>
+</a>

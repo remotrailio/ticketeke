@@ -1,7 +1,7 @@
 <div>
     {{-- Hero --}}
     <section class="py-20 text-white" style="background: linear-gradient(135deg, #1d4ed8, #2563EB, #7c3aed);">
-        <div class="container mx-auto px-4">
+        <div class="mx-auto max-w-7xl px-4">
             <div class="max-w-4xl mx-auto text-center">
                 <h1 class="text-4xl md:text-6xl font-bold mb-6">Turn Your Events Into Success Stories</h1>
                 <p class="text-xl md:text-2xl mb-8 text-white/90">Join Kenya's leading event platform and reach thousands
@@ -30,7 +30,7 @@
 
     {{-- Stats --}}
     <section class="py-16 bg-white border-b border-slate-100">
-        <div class="container mx-auto px-4">
+        <div class="mx-auto max-w-7xl px-4">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
                 <div class="text-center">
                     <div class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">5,000+</div>
@@ -54,7 +54,7 @@
 
     {{-- Why section --}}
     <section class="py-16 bg-slate-50">
-        <div class="container mx-auto px-4">
+        <div class="mx-auto max-w-7xl px-4">
             <div class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Why Organizers Choose {{ $__settings->app_name }}</h2>
                 <p class="text-xl text-slate-500 max-w-2xl mx-auto">Everything you need to create, promote, and manage successful events</p>
@@ -84,7 +84,7 @@
 
     {{-- Features list --}}
     <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
+        <div class="mx-auto max-w-7xl px-4">
             <div class="max-w-5xl mx-auto">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Powerful Features for Every Event</h2>
@@ -107,7 +107,7 @@
 
     {{-- Testimonials --}}
     <section class="py-16 bg-indigo-50">
-        <div class="container mx-auto px-4">
+        <div class="mx-auto max-w-7xl px-4">
             <div class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Trusted by Event Organizers Across Kenya</h2>
             </div>
@@ -138,7 +138,7 @@
 
     {{-- How it works --}}
     <section class="py-16 bg-white">
-        <div class="container mx-auto px-4">
+        <div class="mx-auto max-w-7xl px-4">
             <div class="max-w-4xl mx-auto">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">How It Works</h2>
@@ -165,7 +165,7 @@
 
     {{-- CTA / Signup --}}
     <section id="signup" class="py-20 bg-slate-50">
-        <div class="container mx-auto px-4">
+        <div class="mx-auto max-w-7xl px-4">
             <div class="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/60 max-w-2xl mx-auto p-8">
                 <div class="text-center mb-8">
                     <h2 class="text-3xl font-bold text-slate-900 mb-2">Ready to Get Started?</h2>

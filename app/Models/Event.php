@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\EventStatus;
 use App\Enums\EventVisibility;
+use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -89,6 +90,11 @@ class Event extends Model
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function attendees(): HasMany
+    {
+        return $this->hasMany(Order::class)->where('status', OrderStatus::COMPLETED);
     }
 
     public function tickets(): HasManyThrough
