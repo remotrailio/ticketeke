@@ -20,7 +20,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
-                <span>{{ $order->event->starts_at?->format('D, d M Y · H:i') }}</span>
+                <span>{{ $order->event->start_at?->format('D, d M Y · H:i') }}</span>
             </div>
             @if($order->event->venue_name)
                 <div class="flex items-center gap-2">
@@ -44,8 +44,11 @@
         </div>
         <div class="divide-y divide-slate-50">
             @foreach($order->tickets as $ticket)
-                <div class="flex items-center justify-between px-6 py-4">
-                    <div>
+                <div class="flex items-center gap-4 px-6 py-4">
+                    <div class="shrink-0 rounded-xl border border-slate-100 bg-white p-1.5">
+                        {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(80)->margin(0)->generate($ticket->qr_code) !!}
+                    </div>
+                    <div class="flex-1 min-w-0">
                         <p class="text-sm font-semibold text-slate-800">{{ $ticket->orderItem->ticketType->name }}</p>
                         <p class="mt-0.5 font-mono text-xs text-slate-400 tracking-widest">{{ $ticket->ticket_code }}</p>
                     </div>

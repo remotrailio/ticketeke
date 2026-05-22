@@ -215,7 +215,7 @@
 
         // QR encodes a signed URL — tamper-proof, expires when the event ends (+ 1 day grace).
         // Never encode raw IDs; ticket_code is the only external identifier.
-        $qrExpiry   = $event->ends_at?->addDay() ?? now()->addDays(30);
+        $qrExpiry   = $event->end_at?->addDay() ?? now()->addDays(30);
         $qrUrl      = \Illuminate\Support\Facades\URL::temporarySignedRoute(
             'tickets.verify',
             $qrExpiry,
@@ -233,7 +233,7 @@
 
                     <div class="meta-row">
                         <div class="meta-label">Date</div>
-                        <div>{{ $event->starts_at?->format('D, d M Y · H:i') ?? '—' }}</div>
+                        <div>{{ $event->start_at?->format('D, d M Y · H:i') ?? '—' }}</div>
                     </div>
                     @if($event->venue_name)
                     <div class="meta-row">

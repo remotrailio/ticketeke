@@ -23,7 +23,7 @@ class Ticket extends Model
         static::creating(function (Ticket $ticket) {
             $ticket->uuid        ??= (string) Str::uuid();
             $ticket->ticket_code ??= static::generateTicketCode();
-            $ticket->qr_code     ??= $ticket->ticket_code;
+            $ticket->qr_code     ??= route('tickets.verify', ['ticket_code' => $ticket->ticket_code]);
         });
     }
 
