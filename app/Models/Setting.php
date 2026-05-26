@@ -26,7 +26,7 @@ class Setting extends Model
     public static function instance(): self
     {
         return static::firstOrCreate(['id' => 1], [
-            'app_name' => config('app.name', 'Pitisha'),
+            'app_name' => config('app.name', 'Ticketeke'),
         ]);
     }
 }

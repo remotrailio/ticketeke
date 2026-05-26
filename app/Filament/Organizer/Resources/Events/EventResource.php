@@ -58,6 +58,14 @@ class EventResource extends Resource
         return [];
     }
 
+    public static function canCreate(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        return (bool) $user->organizer?->verified;
+    }
+
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
         return $record->isDeletable();

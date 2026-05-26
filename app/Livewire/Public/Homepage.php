@@ -9,7 +9,7 @@ use App\Models\Event;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.app', ['title' => 'Pitisha – Discover Events'])]
+#[Layout('layouts.app', ['title' => 'Ticketeke – Discover Events'])]
 class Homepage extends Component
 {
     public function render()

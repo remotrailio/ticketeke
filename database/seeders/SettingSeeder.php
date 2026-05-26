@@ -10,7 +10,7 @@ class SettingSeeder extends Seeder
     public function run(): void
     {
         Setting::firstOrCreate(['id' => 1], [
-            'app_name' => config('app.name', 'Pitisha'),
+            'app_name' => config('app.name', 'Ticketeke'),
             'logo'     => null,
             'favicon'  => null,
         ]);
