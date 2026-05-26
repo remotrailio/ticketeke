@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Setting;
 use Illuminate\Mail\Markdown;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
@@ -19,6 +20,13 @@ class AppServiceProvider extends ServiceProvider
             Mail::alwaysTo($override);
         }
 
-        View::share('__settings', app_settings());
+        // Guard against fresh environments where migrations have not run yet.
+        // package:discover and other artisan bootstrap commands hit boot() before
+        // the database is ready, so we fall back to an empty Setting instance.
+        try {
+            View::share('__settings', app_settings());
+        } catch (\Throwable) {
+            View::share('__settings', new Setting());
+        }
     }
 }
