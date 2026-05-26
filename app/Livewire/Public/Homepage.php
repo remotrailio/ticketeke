@@ -16,8 +16,9 @@ class Homepage extends Component
     {
         $featured = Event::with(['organizer', 'category'])
             ->withCount('attendees')
-            ->where('status', EventStatus::PUBLISHED)
+            ->whereIn('status', [EventStatus::PUBLISHED, EventStatus::LIVE])
             ->where('visibility', EventVisibility::PUBLIC)
+            ->whereHas('ticketTypes')
             ->where('end_at', '>=', now())
             ->orderByDesc('published_at')
             ->limit(6)
@@ -25,8 +26,9 @@ class Homepage extends Component
 
         $upcoming = Event::with(['organizer', 'category'])
             ->withCount('attendees')
-            ->where('status', EventStatus::PUBLISHED)
+            ->whereIn('status', [EventStatus::PUBLISHED, EventStatus::LIVE])
             ->where('visibility', EventVisibility::PUBLIC)
+            ->whereHas('ticketTypes')
             ->where('end_at', '>=', now())
             ->orderBy('start_at')
             ->limit(8)
@@ -38,8 +40,9 @@ class Homepage extends Component
 
         $heroCategories = Category::where('is_active', true)
             ->withCount(['events' => fn ($q) => $q
-                ->where('status', EventStatus::PUBLISHED)
+                ->whereIn('status', [EventStatus::PUBLISHED, EventStatus::LIVE])
                 ->where('visibility', EventVisibility::PUBLIC)
+                ->whereHas('ticketTypes')
                 ->where('end_at', '>=', now())
             ])
             ->having('events_count', '>', 0)

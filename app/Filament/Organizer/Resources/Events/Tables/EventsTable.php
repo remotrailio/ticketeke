@@ -10,6 +10,7 @@ use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -71,7 +72,24 @@ class EventsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->before(function (DeleteBulkAction $action, \Illuminate\Support\Collection $records) {
+                            $blocked = $records->filter(fn (Event $e) => ! $e->isDeletable());
+
+                            if ($blocked->isEmpty()) {
+                                return;
+                            }
+
+                            Notification::make()
+                                ->warning()
+                                ->title($blocked->count() . ' event(s) cannot be deleted')
+                                ->body('Events that have started or have paid orders were skipped.')
+                                ->send();
+
+                            if ($blocked->count() === $records->count()) {
+                                $action->halt();
+                            }
+                        }),
                 ]),
             ]);
     }

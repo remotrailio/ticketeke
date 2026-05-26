@@ -49,8 +49,9 @@ class BrowseEvents extends Component
     public function render()
     {
         $query = Event::with(['organizer', 'category', 'ticketTypes'])->withCount('attendees')
-            ->where('status', EventStatus::PUBLISHED)
+            ->whereIn('status', [EventStatus::PUBLISHED, EventStatus::LIVE])
             ->where('visibility', EventVisibility::PUBLIC)
+            ->whereHas('ticketTypes')
             ->where(function ($q) {
                 $q->where('end_at', '>=', now())
                   ->orWhere(function ($q) {

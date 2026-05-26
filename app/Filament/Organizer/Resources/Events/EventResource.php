@@ -58,6 +58,11 @@ class EventResource extends Resource
         return [];
     }
 
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return $record->isDeletable();
+    }
+
     public static function getPages(): array
     {
         return [

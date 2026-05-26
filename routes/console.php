@@ -9,3 +9,6 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('app:expire-orders')->everyTenMinutes();
+
+Schedule::job(new \App\Jobs\MarkEventsAsLiveJob)->hourly()->onOneServer();
+Schedule::job(new \App\Jobs\MarkEventsAsEndedJob)->hourly()->onOneServer();

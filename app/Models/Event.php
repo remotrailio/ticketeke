@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\EventStatus;
 use App\Enums\EventVisibility;
 use App\Enums\OrderStatus;
+use App\Enums\PaymentStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,22 @@ class Event extends Model
 
     protected static function booted(): void
     {
+        static::updating(function (Event $event) {
+            if ($event->isDirty('end_at') && $event->status === EventStatus::ENDED) {
+                $event->status = EventStatus::DRAFT;
+            }
+        });
+
+        static::deleting(function (Event $event) {
+            if ($event->start_at <= now()) {
+                throw new \RuntimeException('Cannot delete an event that has already started.');
+            }
+
+            if ($event->orders()->where('payment_status', PaymentStatus::PAID)->exists()) {
+                throw new \RuntimeException('Cannot delete an event that has paid orders.');
+            }
+        });
+
         static::creating(function (Event $event) {
             $event->uuid ??= (string) Str::uuid();
 
@@ -95,6 +112,15 @@ class Event extends Model
     public function attendees(): HasMany
     {
         return $this->hasMany(Order::class)->where('status', OrderStatus::COMPLETED);
+    }
+
+    public function isDeletable(): bool
+    {
+        if ($this->start_at <= now()) {
+            return false;
+        }
+
+        return ! $this->orders()->where('payment_status', PaymentStatus::PAID)->exists();
     }
 
     public function tickets(): HasManyThrough
