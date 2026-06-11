@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n 'dragend\\\\|drag\\\\|afterStateUpdated\\\\|$wire\\\\|statePath\\\\|dispatch\\\\|set\\(' /Users/kiptoo/Documents/personal/pitisha/vendor/cheesegrits/filament-google-maps/resources/js/filament-google-maps.js)",
+      "Bash(grep -n 'markerMoved\\\\|$wire\\\\|livewire\\\\|set\\\\b' /Users/kiptoo/Documents/personal/pitisha/vendor/cheesegrits/filament-google-maps/resources/js/filament-google-maps.js)",
+      "Bash(php artisan tinker '--execute= *)",
+      "Bash(php artisan *)"
+    ]
+  }
+}
